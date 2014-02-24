@@ -74,7 +74,7 @@ public class Skitter {
 		EntityList.addMapping(EntitySkitterWarrior.class, "SkitterWarrior", id, 14342901, 8026845);
 		LanguageRegistry.instance().addStringLocalization("entity.SkitterWarrior.name", "en_US", "Skitter Warrior");
 		id++;
-		
+		;
 
 		EntityRegistry.addSpawn(EntitySkitterQueen.class, 0, 0, 1, EnumCreatureType.monster, BiomeGenBase.beach,
 				BiomeGenBase.extremeHills, BiomeGenBase.extremeHillsEdge, BiomeGenBase.forest,
