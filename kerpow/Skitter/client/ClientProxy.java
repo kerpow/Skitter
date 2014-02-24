@@ -1,4 +1,4 @@
-package kerpow.Skitter.client;
+package kerpow.Skitter.Client;
 
 import kerpow.Skitter.CommonProxy;
 import kerpow.Skitter.Entities.EntitySkitterQueen;

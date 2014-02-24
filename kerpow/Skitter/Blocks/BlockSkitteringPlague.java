@@ -7,7 +7,11 @@ import kerpow.Skitter.Entities.EntitySkitterWarrior;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -135,20 +139,40 @@ public class BlockSkitteringPlague extends Block {
 
 	}
 
+	@Override
+	public void onEntityWalking(World world, int par2, int par3, int par4, Entity entity) {
+		super.onEntityWalking(world, par2, par3, par4, entity);
+		
+		if(!world.isRemote && entity instanceof EntityPlayer)
+		{
+			((EntityPlayer)entity).addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 4, true));
+		}
+		
+		
+		
+	}
+
+	@Override
+	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
+		// TODO Auto-generated method stub
+		super.onEntityCollidedWithBlock(par1World, par2, par3, par4, par5Entity);
+	}
+
 	public void updateTick(World world, int xpos, int ypos, int zpos, Random par5Random) {
-		// check spread
-		this.doPlagueSpread(world, xpos, ypos, zpos);
+		if (!world.isDaytime()) {
+			// check spread
+			this.doPlagueSpread(world, xpos, ypos, zpos);
 
-		// destroy trees
-		this.destroyTreeAbove(world, xpos, ypos, zpos);
-		// check spawn
-		if (!world.isDaytime() && world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xpos - 10, ypos - 10, zpos - 10, xpos + 10, ypos + 10, zpos + 10)).size() > 0) {
-
-			// spawn skitter
-			EntitySkitterWarrior skitter = new EntitySkitterWarrior(world);
-			skitter.setLocationAndAngles(xpos, ypos, zpos, 0, 0.0F);
-			if (skitter.getCanSpawnHere())
-				world.spawnEntityInWorld(skitter);
+			// check spawn
+			if (world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xpos - 10, ypos - 3, zpos - 10, xpos + 10, ypos + 3, zpos + 10)).size() > 0
+					&& world.getEntitiesWithinAABB(EntitySkitterWarrior.class, AxisAlignedBB.getBoundingBox(xpos - 10, ypos - 3, zpos - 10, xpos + 10, ypos + 3, zpos + 10)).size() < 10
+			) {
+				// spawn skitter
+				EntitySkitterWarrior skitter = new EntitySkitterWarrior(world);
+				skitter.setLocationAndAngles(xpos, ypos, zpos, 0, 0.0F);
+				if (skitter.getCanSpawnHere())
+					world.spawnEntityInWorld(skitter);
+			}
 		}
 
 	}

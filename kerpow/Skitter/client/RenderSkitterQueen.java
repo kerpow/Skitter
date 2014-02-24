@@ -1,4 +1,4 @@
-package kerpow.Skitter.client;
+package kerpow.Skitter.Client;
 
 import kerpow.Skitter.Entities.EntitySkitterQueen;
 import net.minecraft.client.model.ModelSpider;

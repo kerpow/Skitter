@@ -29,21 +29,18 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public class Skitter {
 
 	public static Block TrampledBlock = Block.netherrack;
-	
-	
-	public  static Block skitterWeb = (new BlockSkitterWeb(2000)).setUnlocalizedName("skitterWeb");
-	public  static Block skitterPlague = (new BlockSkitteringPlague(2001)).setUnlocalizedName("skitterPlague");
-	
+
+	public static Block skitterWeb = (new BlockSkitterWeb(2000)).setUnlocalizedName("skitterWeb");
+	public static Block skitterPlague = (new BlockSkitteringPlague(2001)).setUnlocalizedName("skitterPlague");
+
 	// The instance of your mod that Forge uses.
 	@Instance(value = "SkitterModID")
 	public static Skitter instance;
 
 	// Says where the client and server 'proxy' code is loaded.
-	@SidedProxy(clientSide = "kerpow.Skitter.client.ClientProxy", serverSide = "kerpow.Skitter.CommonProxy")
+	@SidedProxy(clientSide = "kerpow.Skitter.Client.ClientProxy", serverSide = "kerpow.Skitter.CommonProxy")
 	public static CommonProxy proxy;
 
-	
-	
 	@EventHandler
 	// used in 1.6.2
 	// @PreInit // used in 1.5.2
@@ -61,10 +58,9 @@ public class Skitter {
 		LanguageRegistry.instance().addStringLocalization("tile.skitterWeb.name", "en_US", "Skittering Web");
 		GameRegistry.registerBlock(skitterPlague, "skitterPlague");
 		LanguageRegistry.instance().addStringLocalization("tile.skitterPlague.name", "en_US", "Skittering Plague");
-		
+
 		int id = 0;
-		// id is an internal mob id, you can start at 0 and continue adding them
-		// up.
+
 		EntityRegistry.registerModEntity(EntitySkitterQueen.class, "SkitterQueen", id, this, 80, 1, true);
 		EntityList.addMapping(EntitySkitterQueen.class, "SkitterQueen", id, 14342901, 8026845);
 		LanguageRegistry.instance().addStringLocalization("entity.SkitterQueen.name", "en_US", "Skitter Queen");
@@ -74,7 +70,6 @@ public class Skitter {
 		EntityList.addMapping(EntitySkitterWarrior.class, "SkitterWarrior", id, 14342901, 8026845);
 		LanguageRegistry.instance().addStringLocalization("entity.SkitterWarrior.name", "en_US", "Skitter Warrior");
 		id++;
-		;
 
 		EntityRegistry.addSpawn(EntitySkitterQueen.class, 0, 0, 1, EnumCreatureType.monster, BiomeGenBase.beach,
 				BiomeGenBase.extremeHills, BiomeGenBase.extremeHillsEdge, BiomeGenBase.forest,
@@ -82,15 +77,13 @@ public class Skitter {
 				BiomeGenBase.mushroomIslandShore, BiomeGenBase.ocean, BiomeGenBase.plains, BiomeGenBase.river,
 				BiomeGenBase.swampland);
 
-		
-		
 		proxy.registerRenderThings();
 		proxy.registerSound();
 	}
-	
-	public static void l(String msg){
+
+	public static void l(String msg) {
 		FMLLog.log(Level.INFO, msg);
-		
+
 	}
 
 	@EventHandler

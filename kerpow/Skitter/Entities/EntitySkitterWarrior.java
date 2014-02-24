@@ -58,22 +58,17 @@ public class EntitySkitterWarrior extends EntityMob {
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAISiegeWalls(this));
 		this.tasks.addTask(1, new EntityAISiegeCeiling(this));
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this,
-				EntityPlayer.class, 1.0D, false));
-		this.tasks.addTask(3, new EntityAIAttackOnCollide(this,
-				EntityVillager.class, 1.0D, true));
+		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
+		this.tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0D, true));
 		this.tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 1.0D));
-		this.tasks
-				.addTask(5, new EntityAIMoveThroughVillage(this, 1.0D, false));
+		this.tasks.addTask(5, new EntityAIMoveThroughVillage(this, 1.0D, false));
 		this.tasks.addTask(6, new EntityAIWander(this, 1.0D));
-		this.tasks.addTask(7, new EntityAIWatchClosest(this,
-				EntityPlayer.class, 8.0F));
+		this.tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(7, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
 		// this.targetTasks.addTask(2, new EntityAISiegeTargeting(this,
 		// EntityPlayer.class, 0, false));
-		this.targetTasks.addTask(2, new EntityAISiegeTargeting(this,
-				EntityVillager.class, 0, false));
+		this.targetTasks.addTask(2, new EntityAISiegeTargeting(this, EntityVillager.class, 0, false));
 
 		if (!world.isRemote) {
 
@@ -97,10 +92,8 @@ public class EntitySkitterWarrior extends EntityMob {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth)
-				.setAttribute(10.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed)
-				.setAttribute(0.2D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.2D);
 
 	}
 
@@ -117,8 +110,7 @@ public class EntitySkitterWarrior extends EntityMob {
 	 * PigZombies).
 	 */
 	protected Entity findPlayerToAttack() {
-		EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(
-				this, 40D);
+		EntityPlayer player = this.worldObj.getClosestVulnerablePlayerToEntity(this, 40D);
 		if (player != null)
 			Skitter.l("Found Player");
 		return player;
@@ -130,48 +122,6 @@ public class EntitySkitterWarrior extends EntityMob {
 	public void setInWeb() {
 		this.isInWeb = false;
 		this.fallDistance = 0.0F;
-	}
-
-	private void punchRandomBlock() {
-		// only attemp some of the time
-		this.specialActionTick++;
-		if (specialActionTick > 200) {
-			specialActionTick = 0;
-
-			for (int x = -1; x < 2; x++)
-				for (int y = 0; y < 2; y++)
-					for (int z = -1; z < 2; z++)
-						if (!this.worldObj.isAirBlock((int) this.posX + x,
-								(int) this.posY + y, (int) this.posZ + z)) {
-
-							int targetBlockId = this.worldObj.getBlockId(
-									(int) this.posX + x, (int) this.posY + y,
-									(int) this.posZ + z);
-							float chanceToNotBreak = Math
-									.min(Block.blocksList[targetBlockId].blockHardness
-											* Block.blocksList[targetBlockId].blockResistance,
-											75) / 80;
-
-							Skitter.l("chance to not break = "
-									+ chanceToNotBreak);
-							if (this.worldObj.rand.nextFloat() > chanceToNotBreak) {
-								this.worldObj.setBlockToAir(
-										(int) this.posX + x, (int) this.posY
-												+ y, (int) this.posZ + z);
-								this.worldObj.playAuxSFX(1012, (int) this.posX
-										+ x, (int) this.posY + y,
-										(int) this.posZ + z, 0);
-								this.worldObj.playAuxSFX(2001, (int) this.posX
-										+ x, (int) this.posY + y,
-										(int) this.posZ + z, targetBlockId);
-							} else {
-								this.worldObj.destroyBlockInWorldPartially(
-										this.entityId, (int) this.posX + x,
-										(int) this.posY + y, (int) this.posZ
-												+ z, 1);
-							}
-						}
-		}
 	}
 
 	/**
@@ -196,10 +146,8 @@ public class EntitySkitterWarrior extends EntityMob {
 					double d0 = par1Entity.posX - this.posX;
 					double d1 = par1Entity.posZ - this.posZ;
 					float f2 = MathHelper.sqrt_double(d0 * d0 + d1 * d1);
-					this.motionX = d0 / (double) f2 * 0.5D * 0.800000011920929D
-							+ this.motionX * 0.20000000298023224D;
-					this.motionZ = d1 / (double) f2 * 0.5D * 0.800000011920929D
-							+ this.motionZ * 0.20000000298023224D;
+					this.motionX = d0 / (double) f2 * 0.5D * 0.800000011920929D + this.motionX * 0.20000000298023224D;
+					this.motionZ = d1 / (double) f2 * 0.5D * 0.800000011920929D + this.motionZ * 0.20000000298023224D;
 					this.motionY = 0.4000000059604645D;
 				}
 			} else {
@@ -209,30 +157,21 @@ public class EntitySkitterWarrior extends EntityMob {
 	}
 
 	public boolean attackEntityAsMob(Entity par1Entity) {
-		float f = (float) this.getEntityAttribute(
-				SharedMonsterAttributes.attackDamage).getAttributeValue();
+		float f = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
 		int i = 0;
 
 		if (par1Entity instanceof EntityLivingBase) {
-			f += EnchantmentHelper.getEnchantmentModifierLiving(this,
-					(EntityLivingBase) par1Entity);
-			i += EnchantmentHelper.getKnockbackModifier(this,
-					(EntityLivingBase) par1Entity);
+			f += EnchantmentHelper.getEnchantmentModifierLiving(this, (EntityLivingBase) par1Entity);
+			i += EnchantmentHelper.getKnockbackModifier(this, (EntityLivingBase) par1Entity);
 		}
 
-		boolean flag = par1Entity.attackEntityFrom(
-				DamageSource.causeMobDamage(this), f);
+		boolean flag = par1Entity.attackEntityFrom(DamageSource.causeMobDamage(this), f);
 
 		if (flag) {
 			if (i > 0) {
-				par1Entity.addVelocity(
-						(double) (-MathHelper.sin(this.rotationYaw
-								* (float) Math.PI / 180.0F)
-								* (float) i * 0.5F),
-						0.1D,
-						(double) (MathHelper.cos(this.rotationYaw
-								* (float) Math.PI / 180.0F)
-								* (float) i * 0.5F));
+				par1Entity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F)
+						* (float) i * 0.5F), 0.1D,
+						(double) (MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F));
 				this.motionX *= 0.6D;
 				this.motionZ *= 0.6D;
 			}
@@ -244,8 +183,7 @@ public class EntitySkitterWarrior extends EntityMob {
 			}
 
 			if (par1Entity instanceof EntityLivingBase) {
-				EnchantmentThorns.func_92096_a(this,
-						(EntityLivingBase) par1Entity, this.rand);
+				EnchantmentThorns.func_92096_a(this, (EntityLivingBase) par1Entity, this.rand);
 			}
 		}
 
@@ -291,19 +229,16 @@ public class EntitySkitterWarrior extends EntityMob {
 
 		switch (power) {
 		case Runner:
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed)
-					.setAttribute(.4d);
+			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(.4d);
 			break;
 		case FireImmune:
 			this.isImmuneToFire = true;
 			break;
 		case Healthy:
-			this.getEntityAttribute(SharedMonsterAttributes.maxHealth)
-					.setAttribute(20D);
+			this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(20D);
 			break;
 		case Dangerous:
-			this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
-					.setAttribute(6D);
+			this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setAttribute(6D);
 
 		}
 	}
@@ -315,23 +250,20 @@ public class EntitySkitterWarrior extends EntityMob {
 	 */
 	public void onLivingUpdate() {
 
-
 		if (!this.worldObj.isRemote) {
-			
-			//if there are no nearby players
-			List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class,
-					this.boundingBox.expand(40, 40, 40));
-			
-			
-			if(list.size() == 0)
+
+			// if there are no nearby players
+			List players = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(10,10,10));
+
+			if (players.size() == 0){
+				this.despawnEntity();
 				this.kill();
-			
-			//climb webs
-			if (this.worldObj.getBlockId((int) this.posX, (int) this.posY,
-					(int) this.posZ) == Skitter.skitterWeb.blockID
+			}
+
+			// climb webs
+			if (this.worldObj.getBlockId((int) this.posX, (int) this.posY, (int) this.posZ) == Skitter.skitterWeb.blockID
 					&& this.getAttackTarget() != null
-					&& this.getDistance(this.getAttackTarget().posX, posY,
-							this.getAttackTarget().posZ) < 3
+					&& this.getDistance(this.getAttackTarget().posX, posY, this.getAttackTarget().posZ) < 3
 					&& this.posY < this.getAttackTarget().posY) {
 				// this.entity.isCollidedHorizontally = true;
 				this.motionY = .4;
