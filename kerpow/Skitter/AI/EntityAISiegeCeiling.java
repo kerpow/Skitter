@@ -3,6 +3,7 @@ package kerpow.Skitter.AI;
 import kerpow.Skitter.Skitter;
 import kerpow.Skitter.Entities.EntitySkitterWarrior;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.AxisAlignedBB;
@@ -48,7 +49,7 @@ public class EntityAISiegeCeiling extends EntityAIBase {
 					Skitter.skitterWeb.blockID);
 
 			
-			if (this.entity.getAttackTarget().posY - this.entity.posY > 2)
+			if (this.entity.getAttackTarget().posY - this.entity.posY > 3)
 				return this.siegeCeiling();
 		}
 
@@ -73,7 +74,9 @@ public class EntityAISiegeCeiling extends EntityAIBase {
 			for (int y = minY; y < maxY; y++)
 				for (int z = minZ; z < maxZ; z++) {
 					int blockId = this.entity.worldObj.getBlockId(x, y, z);
-					if (!this.entity.worldObj.isAirBlock(x, y, z) && blockId != Skitter.skitterWeb.blockID ) {
+					Material mat = this.entity.worldObj.getBlockMaterial(x, y, z) ;
+					if (!this.entity.worldObj.isAirBlock(x, y, z) && blockId != Skitter.skitterWeb.blockID  && blockId != Skitter.skitterPlague.blockID 
+							&& mat!= Material.water && mat != Material.lava) {
 						targetX = x;
 						targetY = y;
 						targetZ = z;

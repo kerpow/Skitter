@@ -1,18 +1,23 @@
 package kerpow.Skitter.Blocks;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import kerpow.Skitter.Skitter;
+import kerpow.Skitter.Entities.EntitySkitterBase;
 import kerpow.Skitter.Entities.EntitySkitterWarrior;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -20,16 +25,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockSkitteringPlague extends Block {
 	public BlockSkitteringPlague(int par1) {
-		super(par1, Material.ground);
+		super(par1, Material.materialCarpet);
 		// this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
+		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.05F, 1.0F);
 		this.setTickRandomly(true);
 		this.setCreativeTab(CreativeTabs.tabDecorations);
 
 		this.setTextureName("skitter:plague");
 		this.setLightOpacity(1);
-		this.setHardness(1.0F);
-
+		this.setHardness(.1F);
 	}
 
 	/**
@@ -43,6 +47,14 @@ public class BlockSkitteringPlague extends Block {
 				(double) par4 + this.maxZ);
 	}
 
+    /**
+     * Return true if a player with Silk Touch can harvest this block directly, and not its normal drops.
+     */
+    protected boolean canSilkHarvest()
+    {
+        return false;
+    }
+	
 	/**
 	 * Is this block (a) opaque and (b) a full 1m cube? This determines whether
 	 * or not to render the shared face of two adjacent blocks and also whether
@@ -74,6 +86,7 @@ public class BlockSkitteringPlague extends Block {
 	 * coordinates. Args: world, x, y, z
 	 */
 	public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
+
 		int l = par1World.getBlockId(par2, par3 - 1, par4);
 		Block block = Block.blocksList[l];
 		if (block == null)
@@ -83,6 +96,7 @@ public class BlockSkitteringPlague extends Block {
 		if (!block.isLeaves(par1World, par2, par3 - 1, par4) && !Block.blocksList[l].isOpaqueCube())
 			return false;
 		return par1World.getBlockMaterial(par2, par3 - 1, par4).blocksMovement();
+		
 	}
 
 	/**
@@ -94,17 +108,18 @@ public class BlockSkitteringPlague extends Block {
 	 * @param zpos
 	 */
 	private boolean spreadHere(World world, int x, int y, int z) {
-
-		// check if the block below is air
-		if ((world.isAirBlock(x, y, z) || Block.blocksList[world.getBlockId(x, y, z)].canPlaceBlockAt(world, x, y, z) || Block.blocksList[world.getBlockId(x, y, z)].isWood(world, x, y, z))
-				&& !(world.isAirBlock(x, y - 1, z) || Block.blocksList[world.getBlockId(x, y - 1, z)].canPlaceBlockAt(world, x, y - 1, z) || Block.blocksList[world.getBlockId(x, y - 1, z)].isWood(
-						world, x, y - 1, z)) && world.getBlockId(x, y, z) != Skitter.skitterPlague.blockID && world.getBlockId(x, y - 1, z) != Skitter.skitterPlague.blockID) {
-			world.setBlock(x, y, z, Skitter.skitterPlague.blockID);
+		if(this.canPlaceBlockAt(world, x, y, z))
+		{
 			this.destroyTreeAbove(world, x, y, z);
 			return true;
 		}
 
 		return false;
+	}
+
+	@Override
+	public int getRenderType() {
+		return -1;
 	}
 
 	/**
@@ -135,46 +150,81 @@ public class BlockSkitteringPlague extends Block {
 		for (int x = xpos - 1; x <= xpos + 1; x++)
 			for (int y = ypos - 1; y <= ypos + 1; y++)
 				for (int z = zpos - 1; z <= zpos + 1; z++)
-					this.spreadHere(world, x, y, z);
+					if (this.spreadHere(world, x, y, z))
+						return;
 
 	}
 
 	@Override
 	public void onEntityWalking(World world, int par2, int par3, int par4, Entity entity) {
 		super.onEntityWalking(world, par2, par3, par4, entity);
-		
-		if(!world.isRemote && entity instanceof EntityPlayer)
-		{
-			((EntityPlayer)entity).addPotionEffect(new PotionEffect(Potion.blindness.id, 100, 4, true));
-		}
-		
-		
-		
+
 	}
 
 	@Override
 	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity) {
 		// TODO Auto-generated method stub
 		super.onEntityCollidedWithBlock(par1World, par2, par3, par4, par5Entity);
+		if(!par1World.isRemote)
+		{ 
+			if(par5Entity instanceof EntityPlayer){
+				par1World.setBlockToAir(par2, par3, par4);
+			}
+		}
 	}
 
 	public void updateTick(World world, int xpos, int ypos, int zpos, Random par5Random) {
 		if (!world.isDaytime()) {
 			// check spread
 			this.doPlagueSpread(world, xpos, ypos, zpos);
-
-			// check spawn
-			if (world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xpos - 10, ypos - 3, zpos - 10, xpos + 10, ypos + 3, zpos + 10)).size() > 0
-					&& world.getEntitiesWithinAABB(EntitySkitterWarrior.class, AxisAlignedBB.getBoundingBox(xpos - 10, ypos - 3, zpos - 10, xpos + 10, ypos + 3, zpos + 10)).size() < 10
-			) {
-				// spawn skitter
-				EntitySkitterWarrior skitter = new EntitySkitterWarrior(world);
-				skitter.setLocationAndAngles(xpos, ypos, zpos, 0, 0.0F);
-				if (skitter.getCanSpawnHere())
-					world.spawnEntityInWorld(skitter);
-			}
 		}
 
+		// check spawn
+		if (world.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(xpos - 10, ypos - 3, zpos - 10, xpos + 10, ypos + 3, zpos + 10)).size() > 0
+				&& world.getEntitiesWithinAABB(EntitySkitterBase.class, AxisAlignedBB.getBoundingBox(xpos - 10, ypos - 3, zpos - 10, xpos + 10, ypos + 3, zpos + 10)).size() < 10) {
+			// spawn skitter
+			EntitySkitterWarrior skitter = new EntitySkitterWarrior(world);
+			skitter.setLocationAndAngles(xpos, ypos, zpos, 0, 0.0F);
+			if (skitter.getCanSpawnHere()) {
+				this.removeNearbyPlague(world, xpos, ypos, zpos);
+				world.spawnEntityInWorld(skitter);
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
+
+		return new ArrayList<ItemStack>();
+	}
+
+	public int removeNearbyPlague(World world, int xpos, int ypos, int zpos) {
+		int plagueCount = 0;
+
+		// i'm to lazy to make a proper radius algorithm so here's this instead
+		for (int y = ypos - 1; y <= ypos + 1; y++) {
+			for(int x = xpos - 1; x <= xpos + 1; x++)
+				for(int z = zpos - 1; z <= zpos + 1; z++)
+					this.removePlague(world, x, y, z);
+		
+			//remove a little extra so it's a perfect square
+			this.removePlague(world, xpos + 2, y, zpos);
+			this.removePlague(world, xpos - 1, y, zpos);
+			this.removePlague(world, xpos, y, zpos + 2);
+			this.removePlague(world, xpos, y, zpos - 2);
+		}
+
+		return plagueCount;
+	}
+
+	public boolean removePlague(World world, int x, int y, int z) {
+		if (world.getBlockId(x, y, z) == Skitter.skitterPlague.blockID) {
+
+			world.setBlockToAir(x, y, z);
+			return true;
+
+		}
+		return false;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -203,7 +253,6 @@ public class BlockSkitteringPlague extends Block {
 	 */
 	@Override
 	public boolean isBlockReplaceable(World world, int x, int y, int z) {
-		int meta = world.getBlockMetadata(x, y, z);
-		return (meta >= 7 ? false : blockMaterial.isReplaceable());
+		return true;
 	}
 }

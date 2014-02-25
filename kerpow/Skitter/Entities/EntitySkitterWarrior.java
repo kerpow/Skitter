@@ -42,7 +42,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
-public class EntitySkitterWarrior extends EntityMob {
+public class EntitySkitterWarrior extends EntitySkitterBase {
 
 	private int specialActionTick = 0;
 
@@ -69,6 +69,7 @@ public class EntitySkitterWarrior extends EntityMob {
 		// this.targetTasks.addTask(2, new EntityAISiegeTargeting(this,
 		// EntityPlayer.class, 0, false));
 		this.targetTasks.addTask(2, new EntityAISiegeTargeting(this, EntityVillager.class, 0, false));
+		this.targetTasks.addTask(2, new EntityAISiegeTargeting(this, EntityPlayer.class, 0, false));
 
 		if (!world.isRemote) {
 
@@ -76,7 +77,7 @@ public class EntitySkitterWarrior extends EntityMob {
 			PowerType[] powers = PowerType.values();
 			int powerIndex = world.rand.nextInt(powers.length);
 
-			this.setPower(powers[powerIndex]);
+			//this.setPower(powers[powerIndex]);
 
 		}
 	}
@@ -92,8 +93,8 @@ public class EntitySkitterWarrior extends EntityMob {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.2D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(5.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.3D);
 
 	}
 
@@ -196,7 +197,7 @@ public class EntitySkitterWarrior extends EntityMob {
 	@Override
 	public boolean isOnLadder() {
 
-		return true;
+		return false;
 	}
 
 	/**
@@ -253,11 +254,10 @@ public class EntitySkitterWarrior extends EntityMob {
 		if (!this.worldObj.isRemote) {
 
 			// if there are no nearby players
-			List players = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(10,10,10));
+			List players = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(20,20,20));
 
 			if (players.size() == 0){
 				this.despawnEntity();
-				this.kill();
 			}
 
 			// climb webs

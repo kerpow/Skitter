@@ -34,10 +34,9 @@ public class EntityAISiegeWalls extends EntityAIBase {
 	public boolean shouldExecute() {
 
 		// if i haven't moved much
-		if (this.entity.getAttackTarget() != null && this.entity.worldObj.rand.nextFloat() < .1 ) {
+		if (this.entity.getAttackTarget() != null && this.entity.worldObj.rand.nextFloat() < .1) {
 
-			if (Math.abs( this.entity.posY - this.entity.getAttackTarget().posY ) < 2)
-			{
+			if (Math.abs(this.entity.posY - this.entity.getAttackTarget().posY) < 2) {
 				return this.siegeWall();
 			}
 		}
@@ -47,15 +46,11 @@ public class EntityAISiegeWalls extends EntityAIBase {
 
 	private boolean siegeWall() {
 
-		return setBreakTargetInArea((int) this.entity.posX - 2,
-				(int) this.entity.posY, (int) this.entity.posZ - 2,
-				(int) this.entity.posX + 2, (int) this.entity.posY + 1,
-				(int) this.entity.posZ + 2);
+		return setBreakTargetInArea((int) this.entity.posX - 2, (int) this.entity.posY, (int) this.entity.posZ - 2, (int) this.entity.posX + 2, (int) this.entity.posY + 1, (int) this.entity.posZ + 2);
 
 	}
 
-	private boolean setBreakTargetInArea(int minX, int minY, int minZ,
-			int maxX, int maxY, int maxZ) {
+	private boolean setBreakTargetInArea(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 
 		for (int x = minX; x < maxX; x++)
 			for (int y = minY; y < maxY; y++)
@@ -64,11 +59,11 @@ public class EntityAISiegeWalls extends EntityAIBase {
 						targetX = x;
 						targetY = y;
 						targetZ = z;
-						targetBlockId = this.entity.worldObj
-								.getBlockId(x, y, z);
-						timeToBreak = 120 * Block.blocksList[targetBlockId].blockHardness;
-
-						return true;
+						targetBlockId = this.entity.worldObj.getBlockId(x, y, z);
+						if (targetBlockId != Skitter.skitterPlague.blockID && targetBlockId != Skitter.skitterWeb.blockID) {
+							timeToBreak = 120 * Block.blocksList[targetBlockId].blockHardness;
+							return true;
+						}
 					}
 				}
 
@@ -90,12 +85,8 @@ public class EntityAISiegeWalls extends EntityAIBase {
 	 */
 	public boolean continueExecuting() {
 
-		double distanceToTarget = this.entity.getDistanceSq(
-				(double) this.targetX, (double) this.targetY,
-				(double) this.targetZ);
-		return this.breakingTime <= timeToBreak
-				&& !this.entity.worldObj.isAirBlock(this.targetX, this.targetY,
-						this.targetZ) && distanceToTarget < 4.0D;
+		double distanceToTarget = this.entity.getDistanceSq((double) this.targetX, (double) this.targetY, (double) this.targetZ);
+		return this.breakingTime <= timeToBreak && !this.entity.worldObj.isAirBlock(this.targetX, this.targetY, this.targetZ) && distanceToTarget < 4.0D;
 	}
 
 	/**
@@ -103,8 +94,7 @@ public class EntityAISiegeWalls extends EntityAIBase {
 	 */
 	public void resetTask() {
 		super.resetTask();
-		this.entity.worldObj.destroyBlockInWorldPartially(this.entity.entityId,
-				this.targetX, this.targetY, this.targetZ, -1);
+		this.entity.worldObj.destroyBlockInWorldPartially(this.entity.entityId, this.targetX, this.targetY, this.targetZ, -1);
 	}
 
 	/**
@@ -114,27 +104,21 @@ public class EntityAISiegeWalls extends EntityAIBase {
 		super.updateTask();
 
 		if (this.entity.getRNG().nextInt(20) == 0) {
-			this.entity.worldObj.playAuxSFX(1010, this.targetX, this.targetY,
-					this.targetZ, 0);
+			this.entity.worldObj.playAuxSFX(1010, this.targetX, this.targetY, this.targetZ, 0);
 		}
 
 		++this.breakingTime;
 		int i = (int) ((float) this.breakingTime / timeToBreak * 10.0F);
 
 		if (i != this.field_75358_j) {
-			this.entity.worldObj.destroyBlockInWorldPartially(
-					this.entity.entityId, this.targetX, this.targetY,
-					this.targetZ, i);
+			this.entity.worldObj.destroyBlockInWorldPartially(this.entity.entityId, this.targetX, this.targetY, this.targetZ, i);
 			this.field_75358_j = i;
 		}
 
 		if (this.breakingTime == timeToBreak) {
-			this.entity.worldObj.setBlockToAir(this.targetX, this.targetY,
-					this.targetZ);
-			this.entity.worldObj.playAuxSFX(1012, this.targetX, this.targetY,
-					this.targetZ, 0);
-			this.entity.worldObj.playAuxSFX(2001, this.targetX, this.targetY,
-					this.targetZ, this.targetBlockId);
+			this.entity.worldObj.setBlockToAir(this.targetX, this.targetY, this.targetZ);
+			this.entity.worldObj.playAuxSFX(1012, this.targetX, this.targetY, this.targetZ, 0);
+			this.entity.worldObj.playAuxSFX(2001, this.targetX, this.targetY, this.targetZ, this.targetBlockId);
 		}
 	}
 }

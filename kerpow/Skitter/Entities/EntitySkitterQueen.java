@@ -44,7 +44,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
-public class EntitySkitterQueen extends EntityMob {
+public class EntitySkitterQueen extends EntitySkitterBase {
 
 	private int specialActionTick = 0;
 

@@ -1,6 +1,7 @@
 package kerpow.Skitter.Client;
 
 import kerpow.Skitter.CommonProxy;
+import kerpow.Skitter.Skitter;
 import kerpow.Skitter.Entities.EntitySkitterQueen;
 import kerpow.Skitter.Entities.EntitySkitterWarrior;
 import net.minecraft.client.model.ModelBiped;
@@ -15,6 +16,9 @@ public class ClientProxy extends CommonProxy {
     {
         RenderingRegistry.registerEntityRenderingHandler(EntitySkitterWarrior.class, new RenderSkitterWarrior());
         RenderingRegistry.registerEntityRenderingHandler(EntitySkitterQueen.class, new RenderSkitterQueen());
+        
+        Skitter.skitterPlagueRenderer = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(Skitter.skitterPlagueRenderer, new RenderPlague() );
 //the 0.5F is the shadowsize
     }
     

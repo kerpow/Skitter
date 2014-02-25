@@ -28,6 +28,8 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 @NetworkMod(clientSideRequired = true)
 public class Skitter {
 
+	public static int skitterPlagueRenderer  = -1;
+	
 	public static Block TrampledBlock = Block.netherrack;
 
 	public static Block skitterWeb = (new BlockSkitterWeb(2000)).setUnlocalizedName("skitterWeb");
@@ -77,6 +79,8 @@ public class Skitter {
 				BiomeGenBase.mushroomIslandShore, BiomeGenBase.ocean, BiomeGenBase.plains, BiomeGenBase.river,
 				BiomeGenBase.swampland);
 
+		
+		
 		proxy.registerRenderThings();
 		proxy.registerSound();
 	}

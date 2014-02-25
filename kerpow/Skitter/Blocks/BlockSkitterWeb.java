@@ -16,12 +16,12 @@ public class BlockSkitterWeb extends Block
 {
     public BlockSkitterWeb(int id)
     {
-        super(id, Material.web);
+        super(id, Material.leaves);
         this.setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setLightOpacity(1);
-        this.setHardness(4.0F);
-        this.setTextureName("web");
+        this.setHardness(.1F);
+		this.setTextureName("skitter:web");
     }
     
     /**
@@ -29,11 +29,9 @@ public class BlockSkitterWeb extends Block
      */
     public void updateTick(World world, int x, int y, int z, Random par5Random)
     {
-        if (!world.isRemote && world.getBlockLightValue(x, y + 1, z)  >= 9)
-        {
-        	world.destroyBlock(x, y, z, false);
-        }
+
     }
+    
     public int getFlammability(IBlockAccess world, int x, int y, int z, int metadata, ForgeDirection face)
     {
         return 300;
@@ -94,6 +92,6 @@ public class BlockSkitterWeb extends Block
      */
     protected boolean canSilkHarvest()
     {
-        return true;
+        return false;
     }
 }
