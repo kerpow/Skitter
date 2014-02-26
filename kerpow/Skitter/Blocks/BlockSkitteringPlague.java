@@ -27,7 +27,7 @@ public class BlockSkitteringPlague extends Block {
 	public BlockSkitteringPlague(int par1) {
 		super(par1, Material.materialCarpet);
 		// this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.05F, 1.0F);
+		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1F, 1.0F);
 		this.setTickRandomly(true);
 		this.setCreativeTab(CreativeTabs.tabDecorations);
 
@@ -35,6 +35,8 @@ public class BlockSkitteringPlague extends Block {
 		this.setLightOpacity(1);
 		this.setHardness(.1F);
 	}
+
+
 
 	/**
 	 * Returns a bounding box from the pool of bounding boxes (this means this
@@ -86,16 +88,18 @@ public class BlockSkitteringPlague extends Block {
 	 * coordinates. Args: world, x, y, z
 	 */
 	public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
-
+		return true;
+		/*
 		int l = par1World.getBlockId(par2, par3 - 1, par4);
 		Block block = Block.blocksList[l];
 		if (block == null)
-			return false;
+			return true;
 		if (block == this && (par1World.getBlockMetadata(par2, par3 - 1, par4) & 7) == 7)
 			return true;
 		if (!block.isLeaves(par1World, par2, par3 - 1, par4) && !Block.blocksList[l].isOpaqueCube())
 			return false;
 		return par1World.getBlockMaterial(par2, par3 - 1, par4).blocksMovement();
+		*/
 		
 	}
 
@@ -119,7 +123,7 @@ public class BlockSkitteringPlague extends Block {
 
 	@Override
 	public int getRenderType() {
-		return -1;
+		return Skitter.skitterPlagueRenderer;
 	}
 
 	/**
