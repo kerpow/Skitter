@@ -57,7 +57,7 @@ public class EntitySkitterWarrior extends EntitySkitterBase {
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAISiegeWalls(this));
-		this.tasks.addTask(1, new EntityAISiegeCeiling(this));
+		//this.tasks.addTask(1, new EntityAISiegeCeiling(this));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
 		this.tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0D, true));
 		this.tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 1.0D));
@@ -261,7 +261,7 @@ public class EntitySkitterWarrior extends EntitySkitterBase {
 			}
 
 			// climb webs
-			if (this.worldObj.getBlockId((int) this.posX, (int) this.posY, (int) this.posZ) == Skitter.skitterWeb.blockID
+			if (this.worldObj.getBlockId((int) this.posX, (int) this.posY, (int) this.posZ) == Skitter.blockSkitterWeb.blockID
 					&& this.getAttackTarget() != null
 					&& this.getDistance(this.getAttackTarget().posX, posY, this.getAttackTarget().posZ) < 3
 					&& this.posY < this.getAttackTarget().posY) {

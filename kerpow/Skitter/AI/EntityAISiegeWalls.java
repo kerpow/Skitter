@@ -16,8 +16,14 @@ public class EntityAISiegeWalls extends EntityAIBase {
 	private int targetY = 0;
 	private int targetZ = 0;
 
+	private int lastX = 0;
+	private int lastY = 0;
+	private int lastZ = 0;
+
 	private int targetBlockId = 0;
 	private float timeToBreak = 240;
+	
+	private byte tickCount = 0;
 
 	protected EntitySkitterWarrior entity;
 
@@ -32,15 +38,42 @@ public class EntityAISiegeWalls extends EntityAIBase {
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute() {
+		tickCount++;
+		if(tickCount > 40){
+			// if i haven't moved much
+			if(lastX != (int)this.entity.posX &&
+				lastY != (int)this.entity.posY &&
+				lastZ != (int)this.entity.posZ)
+			{
+				targetX = (int)this.entity.posX;
+				targetY = (int)this.entity.posY;
+				targetZ = (int)this.entity.posZ;
+				
+				//find a block between entity and target
+				if((int)this.entity.posX > (int)this.entity.getAttackTarget().posX)
+					targetX--;
+				else if((int)this.entity.posX < (int)this.entity.getAttackTarget().posX)
+					targetX++;
+				
+				if((int)this.entity.posY > (int)this.entity.getAttackTarget().posY)
+					targetY--;
+				else if((int)this.entity.posY < (int)this.entity.getAttackTarget().posY)
+					targetY++;
+					 
+				if((int)this.entity.posZ > (int)this.entity.getAttackTarget().posZ)
+					targetZ--;
+				else if((int)this.entity.posZ < (int)this.entity.getAttackTarget().posZ)
+					targetZ++;
 
-		// if i haven't moved much
-		if (this.entity.getAttackTarget() != null && this.entity.worldObj.rand.nextFloat() < .1) {
 
-			if (Math.abs(this.entity.posY - this.entity.getAttackTarget().posY) < 2) {
-				return this.siegeWall();
+				this.entity.worldObj.setBlock(targetX, targetY, targetZ, Block.netherrack.blockID);
+				return false;
 			}
+			
+			lastX = (int)this.entity.posX;
+			lastY = (int)this.entity.posY;
+			lastZ = (int)this.entity.posZ;
 		}
-
 		return false;
 	}
 
@@ -52,6 +85,12 @@ public class EntityAISiegeWalls extends EntityAIBase {
 
 	private boolean setBreakTargetInArea(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 
+		//find a block between me and target
+		
+		
+		
+		
+		
 		for (int x = minX; x < maxX; x++)
 			for (int y = minY; y < maxY; y++)
 				for (int z = minZ; z < maxZ; z++) {
@@ -60,7 +99,7 @@ public class EntityAISiegeWalls extends EntityAIBase {
 						targetY = y;
 						targetZ = z;
 						targetBlockId = this.entity.worldObj.getBlockId(x, y, z);
-						if (targetBlockId != Skitter.skitterPlague.blockID && targetBlockId != Skitter.skitterWeb.blockID) {
+						if (targetBlockId != Skitter.blockSkitterPlague.blockID && targetBlockId != Skitter.blockSkitterWeb.blockID) {
 							timeToBreak = 120 * Block.blocksList[targetBlockId].blockHardness;
 							return true;
 						}

@@ -46,7 +46,7 @@ public class EntityAISiegeCeiling extends EntityAIBase {
 			int x = (int) (this.entity.posX + ((Math.random() - Math.random()) * 3));
 			int z = (int) (this.entity.posZ + ((Math.random() - Math.random()) * 3));
 			this.entity.worldObj.setBlock(x, (int) this.entity.posY, z,
-					Skitter.skitterWeb.blockID);
+					Skitter.blockSkitterWeb.blockID);
 
 			
 			if (this.entity.getAttackTarget().posY - this.entity.posY > 3)
@@ -75,7 +75,7 @@ public class EntityAISiegeCeiling extends EntityAIBase {
 				for (int z = minZ; z < maxZ; z++) {
 					int blockId = this.entity.worldObj.getBlockId(x, y, z);
 					Material mat = this.entity.worldObj.getBlockMaterial(x, y, z) ;
-					if (!this.entity.worldObj.isAirBlock(x, y, z) && blockId != Skitter.skitterWeb.blockID  && blockId != Skitter.skitterPlague.blockID 
+					if (!this.entity.worldObj.isAirBlock(x, y, z) && blockId != Skitter.blockSkitterWeb.blockID  && blockId != Skitter.blockSkitterPlague.blockID 
 							&& mat!= Material.water && mat != Material.lava) {
 						targetX = x;
 						targetY = y;

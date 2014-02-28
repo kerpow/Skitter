@@ -2,6 +2,8 @@ package kerpow.Skitter.Blocks;
 
 import java.util.Random;
 
+import kerpow.Skitter.Skitter;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -68,7 +70,7 @@ public class BlockSkitterWeb extends Block
      */
     public int getRenderType()
     {
-        return 1;
+        return Skitter.rendererSkitterWeb;
     }
 
     /**

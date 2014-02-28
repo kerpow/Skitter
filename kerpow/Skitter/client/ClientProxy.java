@@ -16,9 +16,13 @@ public class ClientProxy extends CommonProxy {
     {
         RenderingRegistry.registerEntityRenderingHandler(EntitySkitterWarrior.class, new RenderSkitterWarrior());
         RenderingRegistry.registerEntityRenderingHandler(EntitySkitterQueen.class, new RenderSkitterQueen());
+
         
-        Skitter.skitterPlagueRenderer = RenderingRegistry.getNextAvailableRenderId();
-        RenderingRegistry.registerBlockHandler(Skitter.skitterPlagueRenderer, new RenderPlague() );
+        Skitter.rendererSkitterPlague = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(Skitter.rendererSkitterPlague, new RenderSkitterPlague() );
+        
+        Skitter.rendererSkitterWeb = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(Skitter.rendererSkitterWeb, new RenderSkitterWeb() );
 //the 0.5F is the shadowsize
     }
     

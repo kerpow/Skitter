@@ -92,7 +92,7 @@ public class EntitySkitterQueen extends EntitySkitterBase {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(10.0D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setAttribute(100.0D);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setAttribute(0.1D);
 
 	}
@@ -261,8 +261,8 @@ public class EntitySkitterQueen extends EntitySkitterBase {
 
 		if (!this.worldObj.isRemote) {
 
-			if (Skitter.skitterPlague.canPlaceBlockAt(worldObj, (int) this.posX, (int) this.posY, (int) this.posZ))
-				this.worldObj.setBlock((int) this.posX, (int) this.posY, (int) this.posZ, Skitter.skitterPlague.blockID);
+			if (Skitter.blockSkitterPlague.canPlaceBlockAt(worldObj, (int) this.posX, (int) this.posY, (int) this.posZ))
+				this.worldObj.setBlock((int) this.posX, (int) this.posY, (int) this.posZ, Skitter.blockSkitterPlague.blockID);
 
 		}
 

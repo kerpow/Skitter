@@ -28,12 +28,13 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 @NetworkMod(clientSideRequired = true)
 public class Skitter {
 
-	public static int skitterPlagueRenderer  = -1;
+	public static int rendererSkitterPlague  = -1;
+	public static int rendererSkitterWeb  = -1;
 	
 	public static Block TrampledBlock = Block.netherrack;
 
-	public static Block skitterWeb = (new BlockSkitterWeb(2000)).setUnlocalizedName("skitterWeb");
-	public static Block skitterPlague = (new BlockSkitteringPlague(2001)).setUnlocalizedName("skitterPlague");
+	public static Block blockSkitterWeb = (new BlockSkitterWeb(2000)).setUnlocalizedName("skitterWeb");
+	public static Block blockSkitterPlague = (new BlockSkitteringPlague(2001)).setUnlocalizedName("skitterPlague");
 
 	// The instance of your mod that Forge uses.
 	@Instance(value = "SkitterModID")
@@ -56,9 +57,9 @@ public class Skitter {
 	public void load(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(new SkitterEventHandler());
 
-		GameRegistry.registerBlock(skitterWeb, "skitterWeb");
+		GameRegistry.registerBlock(blockSkitterWeb, "skitterWeb");
 		LanguageRegistry.instance().addStringLocalization("tile.skitterWeb.name", "en_US", "Skittering Web");
-		GameRegistry.registerBlock(skitterPlague, "skitterPlague");
+		GameRegistry.registerBlock(blockSkitterPlague, "skitterPlague");
 		LanguageRegistry.instance().addStringLocalization("tile.skitterPlague.name", "en_US", "Skittering Plague");
 
 		int id = 0;

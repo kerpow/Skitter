@@ -78,7 +78,7 @@ public class EntityAISiege extends EntityAIBase {
 	private boolean siegeAbove() {
 		// if i'm in a web, jump
 		if (this.entity.worldObj.getBlockId((int) this.entity.posX,
-				(int) this.entity.posY, (int) this.entity.posZ) == Skitter.skitterWeb.blockID) {
+				(int) this.entity.posY, (int) this.entity.posZ) == Skitter.blockSkitterWeb.blockID) {
 			this.entity.motionY = .2D;
 			this.entity.onGround = true;
 		}
@@ -86,7 +86,7 @@ public class EntityAISiege extends EntityAIBase {
 		int x = (int) (this.entity.posX + ((Math.random() - Math.random()) * 2));
 		int z = (int) (this.entity.posZ + ((Math.random() - Math.random()) * 2));
 		this.entity.worldObj.setBlock(x, (int) this.entity.posY, z,
-				Skitter.skitterWeb.blockID);
+				Skitter.blockSkitterWeb.blockID);
 
 		return setBreakTargetInArea((int) this.entity.posX,
 				(int) this.entity.posY, (int) this.entity.posZ,
