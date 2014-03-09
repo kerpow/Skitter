@@ -69,7 +69,7 @@ public class EntitySkitterWarrior extends EntitySkitterBase {
 		// this.targetTasks.addTask(2, new EntityAISiegeTargeting(this,
 		// EntityPlayer.class, 0, false));
 		this.targetTasks.addTask(2, new EntityAISiegeTargeting(this, EntityVillager.class, 0, false));
-		this.targetTasks.addTask(2, new EntityAISiegeTargeting(this, EntityPlayer.class, 0, false));
+		//this.targetTasks.addTask(2, new EntityAISiegeTargeting(this, EntityPlayer.class, 0, false));
 
 		if (!world.isRemote) {
 

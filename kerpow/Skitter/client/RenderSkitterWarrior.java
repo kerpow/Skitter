@@ -23,8 +23,8 @@ public class RenderSkitterWarrior extends RenderLiving
 
     public RenderSkitterWarrior()
     {
-        super(new ModelSpider(), .5F);
-        this.scale = .5F;
+        super(new ModelSpider(), 1F);
+        this.scale = 1F;
     }
 
     /**

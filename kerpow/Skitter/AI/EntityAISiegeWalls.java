@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Vec3;
 
 public class EntityAISiegeWalls extends EntityAIBase {
 	private int breakingTime;
@@ -22,7 +23,7 @@ public class EntityAISiegeWalls extends EntityAIBase {
 
 	private int targetBlockId = 0;
 	private float timeToBreak = 240;
-	
+
 	private byte tickCount = 0;
 
 	protected EntitySkitterWarrior entity;
@@ -34,49 +35,67 @@ public class EntityAISiegeWalls extends EntityAIBase {
 		this.setMutexBits(3);
 	}
 
+	private boolean findTarget() {
+		int closestX = 0, closestY = 0, closestZ = 0;
+		double closestDistance = 9999;
+
+		boolean foundTarget = false;
+
+		Vec3 targetLoc = Vec3.createVectorHelper(this.entity.getAttackTarget().posX, this.entity.getAttackTarget().posY, this.entity.getAttackTarget().posZ);
+
+		// of the available targets find the one closest to the target and set
+		// the target
+		for (int x = (int) this.entity.posX - 2; x <= this.entity.posX + 1; x++) {
+			for (int y = (int) this.entity.posY - 1; y <= this.entity.posY + 1; y++) {
+				for (int z = (int) this.entity.posZ - 2; z <= this.entity.posZ + 1; z++) {
+					double distance = targetLoc.distanceTo(Vec3.createVectorHelper(x, y, z));
+					//Skitter.l("Checking " + x + " " + y + " " + z + " - " + distance);
+					//this.entity.worldObj.setBlock(x, y, z, Block.glowStone.blockID);
+					
+					if (!this.entity.worldObj.isAirBlock(x, y, z) && distance < closestDistance) {
+						closestDistance = distance;
+						targetX = x;
+						targetY = y;
+						targetZ = z;
+						foundTarget = true;
+					}
+					
+				}
+			}
+		}
+		return foundTarget;
+	}
+
 	/**
 	 * Returns whether the EntityAIBase should begin execution.
 	 */
 	public boolean shouldExecute() {
 		tickCount++;
-		if(tickCount > 40){
+		if (tickCount > 50) {
+			tickCount = 0;
 			// if i haven't moved much
-			if(lastX != (int)this.entity.posX &&
-				lastY != (int)this.entity.posY &&
-				lastZ != (int)this.entity.posZ)
-			{
-				targetX = (int)this.entity.posX;
-				targetY = (int)this.entity.posY;
-				targetZ = (int)this.entity.posZ;
-				
-				//find a block between entity and target
-				if((int)this.entity.posX > (int)this.entity.getAttackTarget().posX)
-					targetX--;
-				else if((int)this.entity.posX < (int)this.entity.getAttackTarget().posX)
-					targetX++;
-				
-				if((int)this.entity.posY > (int)this.entity.getAttackTarget().posY)
-					targetY--;
-				else if((int)this.entity.posY < (int)this.entity.getAttackTarget().posY)
-					targetY++;
-					 
-				if((int)this.entity.posZ > (int)this.entity.getAttackTarget().posZ)
-					targetZ--;
-				else if((int)this.entity.posZ < (int)this.entity.getAttackTarget().posZ)
-					targetZ++;
+			if (this.isStationary() && this.findTarget())
+				return true;
 
-
-				this.entity.worldObj.setBlock(targetX, targetY, targetZ, Block.netherrack.blockID);
-				return false;
-			}
+			lastX = (int) this.entity.posX;
+			lastY = (int) this.entity.posY;
+			lastZ = (int) this.entity.posZ;
 			
-			lastX = (int)this.entity.posX;
-			lastY = (int)this.entity.posY;
-			lastZ = (int)this.entity.posZ;
 		}
 		return false;
 	}
 
+	private boolean isStationary() {
+		if (lastX != (int) this.entity.posX)
+			return false;
+		if (lastY != (int) this.entity.posY)
+			return false;
+		if (lastZ != (int) this.entity.posZ)
+			return false;
+
+		return true;
+	}
+	/*
 	private boolean siegeWall() {
 
 		return setBreakTargetInArea((int) this.entity.posX - 2, (int) this.entity.posY, (int) this.entity.posZ - 2, (int) this.entity.posX + 2, (int) this.entity.posY + 1, (int) this.entity.posZ + 2);
@@ -85,12 +104,7 @@ public class EntityAISiegeWalls extends EntityAIBase {
 
 	private boolean setBreakTargetInArea(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 
-		//find a block between me and target
-		
-		
-		
-		
-		
+		// find a block between me and target
 		for (int x = minX; x < maxX; x++)
 			for (int y = minY; y < maxY; y++)
 				for (int z = minZ; z < maxZ; z++) {
@@ -107,9 +121,8 @@ public class EntityAISiegeWalls extends EntityAIBase {
 				}
 
 		return false;
-
 	}
-
+*/
 	/**
 	 * Execute a one shot task or start executing a continuous task
 	 */
