@@ -1,46 +1,30 @@
 package kerpow.Skitter.Entities;
 
-import java.util.EnumSet;
 import java.util.List;
-import java.util.UUID;
 
 import kerpow.Skitter.Skitter;
-import kerpow.Skitter.AI.EntityAISiege;
-import kerpow.Skitter.AI.EntityAISiegeCeiling;
 import kerpow.Skitter.AI.EntityAISiegeTargeting;
 import kerpow.Skitter.AI.EntityAISiegeWalls;
-
-import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentThorns;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIBreakDoor;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.ai.attributes.AttributeInstance;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 
 public class EntitySkitterWarrior extends EntitySkitterBase {
 
@@ -57,7 +41,7 @@ public class EntitySkitterWarrior extends EntitySkitterBase {
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAISiegeWalls(this));
-		//this.tasks.addTask(1, new EntityAISiegeCeiling(this));
+		// this.tasks.addTask(1, new EntityAISiegeCeiling(this));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
 		this.tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0D, true));
 		this.tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 1.0D));
@@ -69,7 +53,8 @@ public class EntitySkitterWarrior extends EntitySkitterBase {
 		// this.targetTasks.addTask(2, new EntityAISiegeTargeting(this,
 		// EntityPlayer.class, 0, false));
 		this.targetTasks.addTask(2, new EntityAISiegeTargeting(this, EntityVillager.class, 0, false));
-		//this.targetTasks.addTask(2, new EntityAISiegeTargeting(this, EntityPlayer.class, 0, false));
+		// this.targetTasks.addTask(2, new EntityAISiegeTargeting(this,
+		// EntityPlayer.class, 0, false));
 
 		if (!world.isRemote) {
 
@@ -77,7 +62,7 @@ public class EntitySkitterWarrior extends EntitySkitterBase {
 			PowerType[] powers = PowerType.values();
 			int powerIndex = world.rand.nextInt(powers.length);
 
-			//this.setPower(powers[powerIndex]);
+			// this.setPower(powers[powerIndex]);
 
 		}
 	}
@@ -170,8 +155,7 @@ public class EntitySkitterWarrior extends EntitySkitterBase {
 
 		if (flag) {
 			if (i > 0) {
-				par1Entity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F)
-						* (float) i * 0.5F), 0.1D,
+				par1Entity.addVelocity((double) (-MathHelper.sin(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F), 0.1D,
 						(double) (MathHelper.cos(this.rotationYaw * (float) Math.PI / 180.0F) * (float) i * 0.5F));
 				this.motionX *= 0.6D;
 				this.motionZ *= 0.6D;
@@ -254,35 +238,22 @@ public class EntitySkitterWarrior extends EntitySkitterBase {
 		if (!this.worldObj.isRemote) {
 
 			// if there are no nearby players
-			List players = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(20,20,20));
+			List players = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox.expand(20, 20, 20));
 
-			if (players.size() == 0){
+			if (players.size() == 0) {
 				this.despawnEntity();
 			}
 
-			// climb webs
-			if (this.worldObj.getBlockId((int) this.posX, (int) this.posY, (int) this.posZ) == Skitter.blockSkitterWeb.blockID
-					&& this.getAttackTarget() != null
-					&& this.getDistance(this.getAttackTarget().posX, posY, this.getAttackTarget().posZ) < 3
-					&& this.posY < this.getAttackTarget().posY) {
-				// this.entity.isCollidedHorizontally = true;
-				this.motionY = .4;
-				// this.entity.isAirBorne = true;
+		}
+
+		if (!this.worldObj.isRemote) {
+			if (this.getEntityToAttack() != null && this.getEntityToAttack().posY + (double) this.getEntityToAttack().getEyeHeight() > this.posY + (double) this.getEyeHeight()) {
+				this.motionY += (0.30000001192092896D - this.motionY) * 0.30000001192092896D;
 			}
+		}
 
-			// get block at feet
-			/*
-			 * int y = (int) this.posY - 1; int blockIDatFeet =
-			 * this.worldObj.getBlockId((int) this.posX, y, (int) this.posZ); if
-			 * (blockIDatFeet == Block.dirt.blockID || blockIDatFeet ==
-			 * Block.grass.blockID || blockIDatFeet == Block.stone.blockID) {
-			 * this.worldObj.setBlock((int) this.posX, y, (int) this.posZ,
-			 * Block.netherrack.blockID);
-			 * 
-			 * }
-			 */
-			// if my target is above me and there is a web move up
-
+		if (!this.onGround && this.motionY < 0.0D) {
+			this.motionY *= 0.6D;
 		}
 
 		super.onLivingUpdate();
